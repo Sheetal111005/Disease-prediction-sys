@@ -1,13 +1,11 @@
-const darkModeColors = {
-    background: "#121212",
-    surface: "#1E1E1E",
-    primaryText: "#E0E0E0",
-    secondaryText: "#B0B0B0",
-    accent: "#BB86FC",
-    success: "#03DAC5",
-    error: "#CF6679",
-    border: "#292929"
-  };
-  
-export default darkModeColors;
-  
+// colors.js (or update darkModeColors if using context)
+const healthcareThemeColors = {
+  background: "#e6f2f0",       // Soft mint background
+  surface: "#ffffff",          // White cards/speech bubbles
+  primaryText: "#0f3d3e",      // Dark teal
+  secondaryText: "#3d5a5b",    // Muted teal
+  accent: "#2ab7a9",           // Bright mint/green for buttons
+  border: "#c3dedd",           // Light teal border
+};
+
+export default healthcareThemeColors;

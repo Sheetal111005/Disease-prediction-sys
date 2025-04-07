@@ -5,7 +5,7 @@ import darkModeColors from './COLORS'
 const withLayout = Component => props =>
   (
     <section className='flex'>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className='flex flex-col'>
         <Header />
         <main style={{background:darkModeColors.surface}} className='h-full' >

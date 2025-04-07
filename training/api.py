@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import numpy as np
+from flask_cors import CORS
 import joblib
 import json
 import statistics
@@ -16,6 +17,7 @@ with open("symptom_index.json") as f:
 prediction_classes = encoder.classes_
 
 app = Flask(__name__)
+CORS(app)
 
 # Helper function
 def predict_disease(symptoms):

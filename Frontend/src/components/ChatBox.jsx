@@ -3,7 +3,7 @@ import darkModeColors from '../layout/COLORS'
 
 export default function ChatBox () {
   return (
-     <div className='flex items-center left-[240px]  bottom-16 fixed w-[calc(100vw-240px)] gap-3 justify-center outline-0 border-0' >
+     <div className='flex items-center z-20  bottom-16 fixed w-[calc(100vw)] gap-3 justify-center outline-0 border-0' >
       <input
         type='text'
         style={{

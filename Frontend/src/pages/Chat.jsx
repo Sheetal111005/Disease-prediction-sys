@@ -6,9 +6,9 @@ const Chat = () => {
 
   const [Messages, setMessages] = useState([]);
   return (
-    <section className='flex flex-col h-full w-[100vw-280px]'>
+    <section className='flex flex-col h-full w-[100vw]'>
       <ChatArea/>
-      <ChatBox/>
+      {/* <ChatBox/> */}
     </section>
     
   )
