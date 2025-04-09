@@ -1,20 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import darkModeColors from './COLORS'
 import { Avatar } from '@mui/material'
 import AccountMenu from '../components/AccountMenu'
-export default function Header() {
+import colors from './COLORS';
+import { useDispatch, useSelector } from 'react-redux';
+import { setModel } from '../redux/global';
+export default function Header () {
+
+  const {model} = useSelector(state=>state.global);
+  // alert(model)
+  const dispatch  = useDispatch()
+
+  // useEffect(() => {
+  //   alert(model)
+  // } , [model])
+
   return (
-    <header className='h-[76px] bg-transparent fixed flex items-center top-[10px] w-[calc(100vw)] ' >
-      <nav style={{
-      }} className='shadow-md bg-white h-[60px] mt-5 justify-between items-center fixed flex p-4 top-0 rounded-full mx-14 w-[calc(100vw-56px-56px)] '>
-        <select className='text-xs text-gray-700'>
-          <option value="">Random Forest Classifier</option>
-          <option value="">Naive Bayes</option>
-          <option value="">Support Vector Machine</option>
-          <option value="">Random Forest Classifier</option>
+    <header className='fixed w-full flex justify-between py-1 px-4'>
+      <img
+        className='h-24 w-24 items-start rounded-md'
+        src='/app.png'
+        alt=''
+      />
+      <div className='p-5  ' >
+        <select value={model}  style={{
+        background:colors.accent,
+        color:colors.primaryText
+      }} onChange={(e) => {dispatch(setModel(e.target.value))}} className='p-3 py-2 rounded-md border-gray-500 border-[.4px] text-xs' name='' id=''>
+          <option value='0'>Grid search</option>
+          <option value='1'>Random Forest</option>
+          <option value='2'>SVM</option>
+          <option value='3'>Naive bayes</option>
         </select>
-        <AccountMenu/>
-      </nav>
+      </div>
     </header>
   )
 }

@@ -1,26 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { Send } from '@mui/icons-material'
+import { ArrowUpward, Pause, Send, Stop } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
-
+import lightTheme from '../layout/COLORS'
 export default function ChatArea () {
-  const [messages, setMessages] = useState([
-    { text: 'Hello! What symptoms are you experiencing today?', sender: 'bot' }
-  ])
+  const [messages, setMessages] = useState([])
+  // [
+  //   { text: 'Hello! What symptoms are you experiencing today?', sender: 'bot' }
+  // ]
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
-
   const symptomList = [
-    'itching', 'skin_rash', 'joint_pain', 'vomiting', 'fatigue',
-    'cough', 'high_fever', 'headache', 'yellowish_skin', 'nausea',
-    'loss_of_appetite', 'abdominal_pain', 'diarrhoea', 'chest_pain',
-    'dizziness', 'excessive_hunger', 'swelling_joints', 'loss_of_balance',
-    'irritability', 'painful_walking', 'prognosis'
+    'itching',
+    'skin_rash',
+    'joint_pain',
+    'vomiting',
+    'fatigue',
+    'cough',
+    'high_fever',
+    'headache',
+    'yellowish_skin',
+    'nausea',
+    'loss_of_appetite',
+    'abdominal_pain',
+    'diarrhoea',
+    'chest_pain',
+    'dizziness',
+    'excessive_hunger',
+    'swelling_joints',
+    'loss_of_balance',
+    'irritability',
+    'painful_walking',
+    'prognosis'
   ]
 
   const quickMessages = [
-    'I have a fever', 'I feel tired', 'I have a headache',
-    'I feel dizzy', 'My stomach hurts'
+    'itching',
+    'skin_rash',
+    'joint_pain',
+    'vomiting',
+    'fatigue',
   ]
 
   const messagesEndRef = useRef(null)
@@ -43,13 +62,16 @@ export default function ChatArea () {
       const res = await axios.post('http://localhost:5000/predict', {
         symptoms: input
       })
-      const reply = res.data.final_prediction
+      const msg = await axios.post('http://localhost:3000/get-res', {
+        disease: res.data.final_prediction
+      })
+      const reply = msg.data.response
 
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
           {
-            text: `Based on your symptoms, it might be *${reply}*.`,
+            text: `${reply}.`,
             sender: 'bot'
           }
         ])
@@ -80,9 +102,11 @@ export default function ChatArea () {
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          
+
           {
-            text: reply ? `Based on your symptoms, it might be ${reply}.`:'Sorry failed to generate output',
+            text: reply
+              ? `Based on your symptoms, it might be ${reply}.`
+              : 'Sorry failed to generate output',
             sender: 'bot'
           }
         ])
@@ -119,8 +143,11 @@ export default function ChatArea () {
   }
 
   return (
-    <div className='bg-teal-50 from-teal-50 via-teal-100 to-teal-50 [#e6f2f0] h-[calc(100vh)] pt-[0px] px-4 md:px-[180px] flex flex-col pb-52 overflow-y-auto'>
-      <div className='flex-1 overflow-y-auto justify-end flex flex-col pb-10 h-[550px]'>
+    <div
+      style={{ background: lightTheme.background }}
+      className=' h-[calc(100vh)] pt-[100px] px-4 md:px-[180px] flex flex-col pb-52 overflow-y-auto'
+    >
+      <div className='flex-1 h overflow-scroll justify-end flex flex-col pb-10  max-h-[650px]'>
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -129,13 +156,13 @@ export default function ChatArea () {
             }`}
           >
             <div
-              className={`rounded-xl  text-gray-800 px-4 py-2 text-sm max-w-[70%] whitespace-pre-wrap ${
+              className={`rounded-xl  text-gray-400  py-2 text-sm max-w-[70%] whitespace-pre-wrap ${
                 msg.sender === 'user'
                   ? ' flex gap-3 flex-row-reverse'
                   : 'flex gap-1'
               }`}
             >
-            <p>{msg.sender}</p> : <p>{msg.text}</p>
+              <p>{msg.text}</p>
             </div>
           </div>
         ))}
@@ -177,21 +204,68 @@ export default function ChatArea () {
         </div>
       )}
 
-      <div className='fixed bottom-24 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[60%] flex gap-2 z-50'>
+      {messages.length <= 0 && (
+        <>
+          <div className='fixed bottom-[55%] w-full left-0 flex flex-col items-center' style={{
+            color:lightTheme.primaryText
+          }}>
+            <h1 className='text-3xl font-bold'>Hello User ! How may we help you ?</h1><br />
+            <h1 className='text-2xl font-bold' > Please Enter your symptoms</h1>
+          </div>
+        </>
+      )}
+
+      <div
+        className={`${
+          messages.length > 0 ? 'bottom-20' : 'bottom-[40%]'
+        } fixed   left-1/2 transform -translate-x-1/2 w-[90%] md:w-[60%] flex items-center gap-2 z-50`}
+      >
         <input
           type='text'
           placeholder='Describe your symptoms (e.g. headache, cough)...'
-          className='flex-1 p-3 px-6 text-sm rounded-full bg-[#fff] shadow-md focus:outline-none focus:ring-0 outline-none'
+          style={{
+            background: lightTheme.accent,
+            color: lightTheme.primaryText
+          }}
+          className='flex-1 border-[.5px] border-gray-500 py-6 px-6 text-sm rounded-2xl  shadow-md focus:outline-none focus:ring-0 outline-none'
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
         />
         <IconButton
-          
+          sx={{
+            background: lightTheme.accent,
+            color: lightTheme.primaryText,
+            height: 40,
+            width: 40
+          }}
           onClick={handleSend}
         >
-          <Send/>
+          {!isTyping ? (
+            <ArrowUpward color='inherit' />
+          ) : (
+            <Stop color='inherit' />
+          )}
         </IconButton>
+      </div>
+      <div
+        className={`w-[100%] left-0 fixed ${
+          messages.length > 0 ? 'hidden' : 'bottom-[30%]'
+        } justify-center flex flex-wrap gap-2 z-50`}
+      >
+        {quickMessages.map((msg, i) => (
+          <button
+            key={i}
+            style={{
+              background: lightTheme.background,
+              color: lightTheme.primaryText
+            }}
+            className='text-xs border-[.1px] hover:scale-105 transition-all duration-75 ease-in hover:shadow-md border-gray-500 cursor-pointer p-2 px-3 rounded-full'
+            onClick={() => handleQuickMessage(msg)}
+          >
+            {msg}
+          </button>
+        ))}
       </div>
 
       <style>{`

@@ -1,11 +1,12 @@
-// colors.js (or update darkModeColors if using context)
-const healthcareThemeColors = {
-  background: "#e6f2f0",       // Soft mint background
-  surface: "#ffffff",          // White cards/speech bubbles
-  primaryText: "#0f3d3e",      // Dark teal
-  secondaryText: "#3d5a5b",    // Muted teal
-  accent: "#2ab7a9",           // Bright mint/green for buttons
-  border: "#c3dedd",           // Light teal border
+// grokDarkMode.js
+
+const grokDarkMode = {
+  background: '#1d1e20',    // Deep Cosmic Blue-Black
+  primaryText: '#E6F0FF',   // Soft Off-White with a hint of blue
+  accent: '#313234',        // Vibrant Electric Blue (nod to tech and innovation)
+  secondaryText: '#8A9BB8', // Cool Steel Gray
+  highlight: '#1E2A44',     // Darker Blue-Gray for subtle contrast
+  borders: '#334466'        // Muted Blue-Gray for definition
 };
 
-export default healthcareThemeColors;
+export default grokDarkMode;
