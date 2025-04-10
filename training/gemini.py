@@ -4,15 +4,11 @@ from dotenv import load_dotenv
 import os
 from flask_cors import CORS
 
-# Load env variables
-# load_dotenv()
 GEMINI_API_KEY = "AIzaSyAoGoKYw9Tvtl1yC-g6Q1Me4ZSeSdAQEnM"
 
-# Gemini config
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')
 
-# Flask app
 app = Flask(__name__)
 CORS(app)
 
@@ -21,7 +17,6 @@ def predict_disease():
     data = request.json
     disease = data.get('disease', '').strip().lower()
 
-    # if disease is empty or 'undefined' (as a string), return friendly error
     if not disease or disease == 'undefined':
         return jsonify({
             "response": "Sorry, I didn't quite understand that. Could you be more specific?"
@@ -29,9 +24,9 @@ def predict_disease():
 
     prompt = f"""
     # A user entered the word: '{disease}'.
-    Give a friendly, casual message like: j
+    Give a friendly, casual message like:
     "Based on symptoms , you might have a {disease} infection. Don’t worry, just consult a doctor!"
-    Only message nothing else
+    Only message nothing else and not extacly this message
     """
 
     try:

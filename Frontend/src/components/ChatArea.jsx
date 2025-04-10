@@ -158,7 +158,7 @@ export default function ChatArea () {
             <div
               className={`rounded-xl  text-gray-400  py-2 text-sm max-w-[70%] whitespace-pre-wrap ${
                 msg.sender === 'user'
-                  ? ' flex gap-3 flex-row-reverse'
+                  ? ' flex gap-3 flex-row-reverse '
                   : 'flex gap-1'
               }`}
             >
