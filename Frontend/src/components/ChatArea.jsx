@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { ArrowUpward, Pause, Send, Stop } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { ArrowUpward, MapsUgc, Pause, Send, Stop } from '@mui/icons-material'
+import { Icon, IconButton } from '@mui/material'
 import lightTheme from '../layout/COLORS'
 export default function ChatArea () {
   const [messages, setMessages] = useState([])
@@ -9,6 +9,7 @@ export default function ChatArea () {
   //   { text: 'Hello! What symptoms are you experiencing today?', sender: 'bot' }
   // ]
   const [input, setInput] = useState('')
+  const [showSuggestions, setShowSuggestion] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const symptomList = [
     'itching',
@@ -35,11 +36,25 @@ export default function ChatArea () {
   ]
 
   const quickMessages = [
-    'itching',
-    'skin_rash',
-    'joint_pain',
-    'vomiting',
-    'fatigue',
+    'itching,skin_rash,nodal_skin_eruptions',
+
+    'yellowish_skin,nausea,loss_of_appetite,vomiting,fatigue',
+
+    'high_fever,headache,abdominal_pain,diarrhoea,fatigue',
+
+    'high_fever,chills,vomiting,joint_pain,nausea',
+
+    'excessive_hunger,fatigue,irritability,painful_walking',
+
+    'joint_pain,swelling_joints,painful_walking,fatigue',
+
+    'high_fever,headache,skin_rash,nausea,joint_pain',
+
+    'cough,fatigue,headache,high_fever',
+
+    'abdominal_pain,diarrhoea,vomiting,loss_of_appetite',
+
+    'dizziness,loss_of_balance,irritability,headache'
   ]
 
   const messagesEndRef = useRef(null)
@@ -206,11 +221,17 @@ export default function ChatArea () {
 
       {messages.length <= 0 && (
         <>
-          <div className='fixed bottom-[55%] w-full left-0 flex flex-col items-center' style={{
-            color:lightTheme.primaryText
-          }}>
-            <h1 className='text-3xl font-bold'>Hello User ! How may we help you ?</h1><br />
-            <h1 className='text-2xl font-bold' > Please Enter your symptoms</h1>
+          <div
+            className='fixed bottom-[55%] w-full left-0 flex flex-col items-center'
+            style={{
+              color: lightTheme.primaryText
+            }}
+          >
+            <h1 className='text-3xl font-bold'>
+              Hello User ! How may we help you ?
+            </h1>
+            <br />
+            <h1 className='text-2xl font-bold'> Please Enter your symptoms</h1>
           </div>
         </>
       )}
@@ -246,11 +267,49 @@ export default function ChatArea () {
           ) : (
             <Stop color='inherit' />
           )}
-        </IconButton>
+        </IconButton>{' '}
+        {messages.length > 0 && (
+          <>
+            <IconButton
+            onClick={()=>{setShowSuggestion(!showSuggestions)}}
+              sx={{
+                background: lightTheme.accent,
+                color: lightTheme.primaryText,
+                height: 40,
+                width: 40
+              }}
+            >
+              <MapsUgc />
+            </IconButton>
+          </>
+        )}
       </div>
+
+
+
       <div
         className={`w-[100%] left-0 fixed ${
-          messages.length > 0 ? 'hidden' : 'bottom-[30%]'
+          !showSuggestions ? 'hidden' : 'bottom-[22%] '
+        } justify-center flex flex-wrap gap-2 z-50`}
+      >
+        {quickMessages.map((msg, i) => (
+          <button
+            key={i}
+            style={{
+              background: lightTheme.background,
+              color: lightTheme.primaryText
+            }}
+            className='text-xs border-[.1px] hover:scale-105 transition-all duration-75 ease-in hover:shadow-md border-gray-500 cursor-pointer p-2 px-3 rounded-full'
+            onClick={() => {handleQuickMessage(msg);setShowSuggestion(false)}}
+          >
+            {msg}
+          </button>
+        ))}
+      </div>
+
+      <div
+        className={`w-[100%] left-0 fixed ${
+          messages.length > 0 ? 'hidden' : 'bottom-[22%]'
         } justify-center flex flex-wrap gap-2 z-50`}
       >
         {quickMessages.map((msg, i) => (

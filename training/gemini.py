@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import google.generativeai as genai
 from dotenv import load_dotenv
-import os
 from flask_cors import CORS
 
 GEMINI_API_KEY = "AIzaSyAoGoKYw9Tvtl1yC-g6Q1Me4ZSeSdAQEnM"
