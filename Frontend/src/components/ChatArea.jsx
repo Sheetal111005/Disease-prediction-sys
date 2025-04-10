@@ -36,7 +36,7 @@ export default function ChatArea () {
   ]
 
   const quickMessages = [
-    'itching,skin_rash,nodal_skin_eruptions',
+    'itching,skin_rash ',
 
     'yellowish_skin,nausea,loss_of_appetite,vomiting,fatigue',
 
@@ -239,7 +239,7 @@ export default function ChatArea () {
       <div
         className={`${
           messages.length > 0 ? 'bottom-20' : 'bottom-[40%]'
-        } fixed   left-1/2 transform -translate-x-1/2 w-[90%] md:w-[60%] flex items-center gap-2 z-50`}
+        } fixed   left-1/2 transform  -translate-x-1/2 w-[90%] md:w-[60%] flex items-center gap-2 z-50`}
       >
         <input
           type='text'
@@ -290,7 +290,7 @@ export default function ChatArea () {
       <div
         className={`w-[100%] left-0 fixed ${
           !showSuggestions ? 'hidden' : 'bottom-[22%] '
-        } justify-center flex flex-wrap gap-2 z-50`}
+        } justify-center flex flex-wrap  gap-2 z-50`}
       >
         {quickMessages.map((msg, i) => (
           <button
@@ -310,7 +310,7 @@ export default function ChatArea () {
       <div
         className={`w-[100%] left-0 fixed ${
           messages.length > 0 ? 'hidden' : 'bottom-[22%]'
-        } justify-center flex flex-wrap gap-2 z-50`}
+        } justify-center px-16 flex flex-wrap gap-2 z-50`}
       >
         {quickMessages.map((msg, i) => (
           <button
