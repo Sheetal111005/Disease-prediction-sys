@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.hover:hover{
+    background: #000
+    ;
+}
