@@ -14,6 +14,6 @@ const withLayout = Component => props =>
       </div>
       {/* <Footer /> */}
     </section>
-  )
+  ) 
 
 export default withLayout

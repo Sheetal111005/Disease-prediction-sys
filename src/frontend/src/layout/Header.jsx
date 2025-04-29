@@ -16,7 +16,6 @@ export default function Header () {
 
   return (
     <header className='fixed w-full flex justify-between py-1 px-4'>
-      <img className='h-20 w-20 items-start rounded-md' src='/app.png' alt='' />
       <div className='flex items-center'>
         <a href="/" className='text-sm text-gray-50' > Home </a>
         <div className='p-5  '>

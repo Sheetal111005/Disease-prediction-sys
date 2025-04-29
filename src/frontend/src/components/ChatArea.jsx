@@ -3,7 +3,8 @@ import axios from 'axios'
 import { ArrowUpward, MapsUgc, Pause, Send, Stop } from '@mui/icons-material'
 import { Icon, IconButton } from '@mui/material'
 import lightTheme from '../layout/COLORS'
-export default function ChatArea () {
+import { dehradunHospitals, diseaseDetails } from './data'
+export default function ChatArea ({ menu, currUser }) {
   const [messages, setMessages] = useState([])
   // [
   //   { text: 'Hello! What symptoms are you experiencing today?', sender: 'bot' }
@@ -42,7 +43,7 @@ export default function ChatArea () {
 
     'high_fever,headache,abdominal_pain,diarrhoea,fatigue',
 
-    'high_fever,chills,vomiting,joint_pain,nausea',
+    'high_fever,vomiting,joint_pain,nausea',
 
     'excessive_hunger,fatigue,irritability,painful_walking',
 
@@ -57,6 +58,9 @@ export default function ChatArea () {
     'dizziness,loss_of_balance,irritability,headache'
   ]
 
+  useEffect(() => {
+    console.log(messages)
+  },[messages]);
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
@@ -87,9 +91,11 @@ export default function ChatArea () {
           ...prev,
           {
             text: `${reply}.`,
-            sender: 'bot'
+            sender: 'bot',
+            disease:res.data.final_prediction
           }
         ])
+
         setIsTyping(false)
       }, 1000)
     } catch (err) {
@@ -122,7 +128,8 @@ export default function ChatArea () {
             text: reply
               ? `Based on your symptoms, it might be ${reply}.`
               : 'Sorry failed to generate output',
-            sender: 'bot'
+            sender: 'bot',
+            disease:reply
           }
         ])
         setIsTyping(false)
@@ -162,7 +169,7 @@ export default function ChatArea () {
       style={{ background: lightTheme.background }}
       className=' h-[calc(100vh)] pt-[100px] px-4 md:px-[180px] flex flex-col pb-52 overflow-y-auto'
     >
-      <div className='flex-1 h overflow-scroll justify-end flex flex-col pb-10  max-h-[650px]'>
+      <div className='flex-1 h  justify-end flex flex-col pb-10 '>
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -177,17 +184,78 @@ export default function ChatArea () {
                   : 'flex gap-1'
               }`}
             >
-              <p>{msg.text}</p>
+              <div className='flex flex-col gap-3'>
+                <p className='text-lg text-white font-semibold'>{msg.text}</p>
+                {msg.sender != 'user' && (
+                  <>
+                    <h1 className='text-white text-2xl'>
+                      Here is some information about the disease
+                    </h1>
+                    {getDiseaseInfo({disease:msg.disease})?.map((i, idx) => (
+                      <>
+                        <h1 className='text-xl text-gray-50'>Causes</h1>
+                        <div className='flex flex-col text-gray-50'>
+                          {i.causes.map((i, idx) => (
+                            <li>{i + ','}</li>
+                          ))}
+                        </div>
+                        <h1 className='text-xl text-gray-50'>Medicine</h1>
+                        <div className='flex flex-col text-gray-50'>
+                          {i.medicines.map((i, idx) => (
+                            <li>{i + ','}</li>
+                          ))}
+                        </div>
+                        <h1 className='text-xl text-gray-50'>Precautions</h1>
+                        <div className='flex flex-col text-gray-50'>
+                          {i.precautions.map((i, idx) => (
+                            <li>{i + ','}</li>
+                          ))}
+                        </div>
+                        
+                      </>
+                    ))}
+                  </>
+                )}
+                {msg.sender != 'user' &&
+                  dehradunHospitals.map((item, idx) => {
+                    if (idx == 0)
+                      return (
+                        <>
+                          <h1 className='text-white font-bold text-2xl'>
+                            Hey User here are some hospitals for you
+                          </h1>
+                          <a
+                            className='italic cursor-pointer text-sky-700'
+                            href={item.website}
+                          >
+                            <p>{item.name}</p>
+                          </a>
+                        </>
+                      )
+                    return (
+                      <a
+                        className='cursor-pointer italic text-sky-700'
+                        href={item.website}
+                      >
+                        <p>{item.name}</p>
+                      </a>
+                    )
+                  })}
+              </div>
             </div>
           </div>
         ))}
         {isTyping && (
-          <div className='flex justify-start mb-2'>
-            <span className='text-sm text-[#3d5a5b] flex gap-1 items-center'>
-              <span className='dot-flash' />
-              <span className='dot-flash' style={{ animationDelay: '0.2s' }} />
-              <span className='dot-flash' style={{ animationDelay: '0.4s' }} />
-            </span>
+          // <div className='flex justify-start mb-2'>
+          //   <span className='text-sm text-[#3d5a5b] flex gap-1 items-center'>
+          //     <span className='dot-flash' />
+          //     <span className='dot-flash' style={{ animationDelay: '0.2s' }} />
+          //     <span className='dot-flash' style={{ animationDelay: '0.4s' }} />
+          //   </span>
+          // </div>
+          <div className='loader'>
+
+
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -271,7 +339,9 @@ export default function ChatArea () {
         {messages.length > 0 && (
           <>
             <IconButton
-            onClick={()=>{setShowSuggestion(!showSuggestions)}}
+              onClick={() => {
+                setShowSuggestion(!showSuggestions)
+              }}
               sx={{
                 background: lightTheme.accent,
                 color: lightTheme.primaryText,
@@ -284,8 +354,6 @@ export default function ChatArea () {
           </>
         )}
       </div>
-
-
 
       <div
         className={`w-[100%] left-0 fixed ${
@@ -300,7 +368,10 @@ export default function ChatArea () {
               color: lightTheme.primaryText
             }}
             className='text-xs border-[.1px] hover:scale-105 transition-all duration-75 ease-in hover:shadow-md border-gray-500 cursor-pointer p-2 px-3 rounded-full'
-            onClick={() => {handleQuickMessage(msg);setShowSuggestion(false)}}
+            onClick={() => {
+              handleQuickMessage(msg)
+              setShowSuggestion(false)
+            }}
           >
             {msg}
           </button>
@@ -345,4 +416,24 @@ export default function ChatArea () {
       `}</style>
     </div>
   )
+}
+
+const getHospital = () => {
+  return dehradunHospitals
+}
+const getDiseaseInfo = ({disease}) => {
+
+  console.log(disease);
+  if (!disease) {
+    console.error("Disease name is required.");
+    return [];
+  }
+
+  const result = diseaseDetails.filter(i => i.disease.toLowerCase() == disease.toLowerCase());
+  console.log(result)
+  if (result.length === 0) {
+    console.warn(`No information found for disease: ${disease}`);
+  }
+  
+  return result;
 }
